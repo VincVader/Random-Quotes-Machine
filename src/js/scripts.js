@@ -5,11 +5,10 @@ const quoteText = document.querySelector('.quote-text');
 const quoteAuthor = document.querySelector('.quote-author');
 const quoteButton = document.querySelector('.quote-button');
 
-const words = ['fuck', 'cool', 'non', 'sin', 'text', 'bto', 'check'];
 
 const baseText = 'The main problem with quotes on the internet ' +
  'is that people unconditionally believe in their authenticity';
-const getRandomInteger = (min, max) => {
+const rng = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 /**
@@ -29,7 +28,7 @@ async function getQuote() {
     }).then((response) => {
         const cite = {};
         cite.text = response.content;
-        cite.author = response.originator.name;
+        cite.author = '&copy;' + response.originator.name;
         return cite;
     }).catch((err) => {
         console.error(err);
@@ -59,11 +58,26 @@ async function filterBadWords(text) {
 }
 let quote;
 
+const colorize = () => {
+    const color = colors();
+    quoteWrapper.style.background = color;
+    quoteText.style.color = color;
+    quoteAuthor.style.color = color;
+    quoteButton.style.background = color;
+};
+
+const colors = () => {
+    const h = rng(0, 360);
+    const s = rng(42, 98);
+    const l = rng(40, 70);
+    return `hsl(${h},${s}%,${l}%)`;
+};
+
 /**
- * @param {sadf} testQuote - asdf
- * @return {promise} - text
+ * check
  */
 async function check() {
+    colorize();
     quoteButton.disabled = true;
     quote = await getQuote();
     const testQuote = await filterBadWords(quote.text);
@@ -78,5 +92,8 @@ async function check() {
         quoteButton.disabled = false;
     }, 1000);
 }
+
+colorize();
 quoteButton.addEventListener('click', check);
+
 
