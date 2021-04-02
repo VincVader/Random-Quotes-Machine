@@ -8,7 +8,7 @@ const quoteButton = document.querySelector('.quote-button');
 
 const baseText = 'The main problem with quotes on the internet ' +
  'is that people unconditionally believe in their authenticity';
-const rng = (min, max) => {
+const randomRange = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 /**
@@ -64,10 +64,10 @@ let quote;
  * gets random values (in fixed range)
  * @return {string} - hsl(hue, saturation%, lightness%) - nice "random" color
  */
-function colors() {
-    const h = rng(0, 360);
-    const s = rng(42, 98);
-    const l = rng(40, 70);
+function getRandomColor() {
+    const h = randomRange(0, 360);
+    const s = randomRange(42, 98);
+    const l = randomRange(40, 70);
     return `hsl(${h},${s}%,${l}%)`;
 }
 
@@ -76,8 +76,8 @@ function colors() {
  * sets background and text color to that value
  * for elements on page
  */
-function colorize() {
-    const color = colors();
+function colorizePage() {
+    const color = getRandomColor();
     quoteWrapper.style.background = color;
     quoteText.style.color = color;
     quoteAuthor.style.color = color;
@@ -89,8 +89,8 @@ function colorize() {
  * if so => replaces quote with default one
  * also disables button for ~ 1 sec that user cannot spam api-service
  */
-async function check() {
-    colorize();
+async function displayNewQuote() {
+    colorizePage();
     quoteButton.disabled = true;
     quote = await getQuote();
     const testQuote = await filterBadWords(quote.text);
@@ -106,5 +106,5 @@ async function check() {
     }, 1000);
 }
 
-colorize(); // colorize page with some nice color
-quoteButton.addEventListener('click', check); // generates random cite
+colorizePage();
+quoteButton.addEventListener('click', displayNewQuote);
